@@ -1,0 +1,43 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment directory (if you're using venv or virtualenv)
+venv/
+myenv/
+env/
+
+# Ignore pip environment files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Ignore distribution / packaging files
+*.egg-info/
+dist/
+build/
+
+# Ignore IDE/editor directories
+.vscode/
+.idea/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables file (if you use something like .env)
+.env
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Flask specific directories (optional, if you are using any temporary storage directories in Flask)
+instance/
+*.sqlite
+
+# Ignore other temporary files or logs
+*.log
+
+# Ignore any local configuration files (e.g., secrets or config files)
+config.py
+
+*.csv

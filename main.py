@@ -1,95 +1,128 @@
+import argparse
 import os
+import sys
+import pandas as pd
+from app import app  # Importing Flask app from app.py
+from reader import add_row, update_row, delete_row, read_csv, write_csv
 
 
-# collecting user data
-def user_data():
-    name = input("Enter your name: ")
-    city = input("Enter your age: ")
-    salary = int(input("Enter your salary: "))
-    department = input("Enter your department: ")
-    my_dict = {"name": name, "city": city, "salary": salary, "dep": department}
+def main():
+    parser = argparse.ArgumentParser(description="CSV CRUD Operations")
 
-    return my_dict
+    parser.add_argument(
+        'action',
+        choices=['read', 'create', 'update', 'delete', 'add', 'help'],
+        help="Action to perform or display help")
+    parser.add_argument('file_name', help="CSV file name",
+                        nargs='?')  # Optional for help
+    parser.add_argument('--index',
+                        type=int,
+                        help="Index of the row to update/delete")
+    parser.add_argument(
+        '--data',
+        type=str,
+        help="Data for the new or updated row, comma-separated")
+    parser.add_argument('--web',
+                        action='store_true',
+                        help="Launch web interface")
 
+    args = parser.parse_args()
 
-# listing all files
-def listing_files():
-    my_dict = {}
-    file_counter = 1
-    for i in os.listdir():
-        if i.endswith(".csv"):
-            my_dict.update(
-                {file_counter: i},
-            )
-            file_counter += 1
-    return my_dict
+    # If --web flag is passed, handle it
+    if args.web:
+        if args.action == 'help':
+            print("Starting web server to display the help page...")
 
-
-# creating file and storing data
-def create_a_file():
-    file_name = input("Enter the name of the file:\n>>> ")
-    file_name = file_name + ".csv"
-    # Check if the file already exists
-    if os.path.exists(file_name):
-        print("\nFile already exists. Please try another name.")
-
-    else:
-        with open(file_name + ".csv", "w+") as file:
-            file.writelines("Name, City, Salary, Department\n")
-        print(f"\nFile is created by name {file_name}.csv.\n")
-
-
-def add_data():
-    all_files = listing_files()
-    if all_files:
-        for key in all_files.keys():
-            print(f"{key}. {all_files[key]}")
-
-        file_sr = int(input("Enter the serial no. of that file you want to edit.\n>>>"))
-        file_name = str(all_files[file_sr])
-        with open(file_name, "a") as f:
-            user_data_no = int(input("\nHow many users data you want to add.\n>>>"))
-
-            for i in range(user_data_no):
-                data = user_data()
-                for j in data.keys():
-                    f.writelines(f"{str(data[j])},")
-                f.writelines("\n")
-
-        print("\nALl data is written into csv file successfully.")
-
-    else:
-        print("\nNo such files found.Before adding data create a file.\n")
-
-
-# welcome line
-print("\n\n___________WELCOME___________\n\n")
-
-
-# infinite loop for running program
-while True:
-    choice = int(
-        input(
-            "\n1. for listing all files.\n2. for creating a new file.\n3. for adding data in existing file.\n4. for exit from this program\n>>>"
-        )
-    )
-    if choice == 1:
-        files = listing_files()
-        if files:
-            for key in files.keys():
-                print(f"{key}. {files[key]}")
+            # Explicitly set the Flask environment and server name for /help
+            app.config[
+                "SERVER_NAME"] = "localhost:5000"  # Default localhost:5000
+            with app.app_context():
+                os.environ["FLASK_RUN_FROM_CLI"] = "false"
+                print(
+                    "Navigate to http://localhost:5000/help to see the help page."
+                )
+                app.run(debug=True)
+            return
         else:
-            print("\nNo files found.\n")
+            print(f"Starting web server to display '{args.file_name}'...")
+            if not os.path.exists(args.file_name):
+                print(f"Error: The file '{args.file_name}' does not exist.")
+                sys.exit(1)
+            os.environ[
+                "CSV_FILE"] = args.file_name  # Pass the CSV file to Flask
+            app.run(debug=True)
+            return
 
-    elif choice == 2:
-        create_a_file()
+    # Handle CLI-based actions
+    if args.action == 'read':
+        df = read_csv(args.file_name)
+        if df is not None:
+            print(df)
 
-    elif choice == 3:
-        add_data()
+    elif args.action == 'create':
+        # Create the CSV file with the header if it doesn't exist
+        write_csv(
+            pd.DataFrame(columns=["name", "age", "salary", "department"]),
+            args.file_name)
 
-    elif choice == 4:
-        print("\nProgram exited successfully.")
-        break
+    elif args.action == 'add':
+        # Add a new row to the CSV
+        if args.data:
+            data = args.data.split(',')
+            if len(data) == 4:
+                add_row(
+                    args.file_name, {
+                        "name": data[0],
+                        "age": int(data[1]),
+                        "salary": float(data[2]),
+                        "department": data[3]
+                    })
+            else:
+                print(
+                    "Error: Invalid data format. Ensure you provide 4 values (name, age, salary, department)."
+                )
+        else:
+            print("Error: Data argument is required for adding a new row.")
 
-    else:
-        print("\nYou made a wrong choice.Please try again.\n")
+    elif args.action == 'update':
+        # Update an existing row
+        if args.index is not None and args.data:
+            data = args.data.split(',')
+            if len(data) == 4:
+                update_row(
+                    args.file_name, args.index, {
+                        "name": data[0],
+                        "age": int(data[1]),
+                        "salary": float(data[2]),
+                        "department": data[3]
+                    })
+            else:
+                print(
+                    "Error: Invalid data format. Ensure you provide 4 values (name, age, salary, department)."
+                )
+        else:
+            print("Error: Index and data are required for updating.")
+
+    elif args.action == 'delete':
+        if args.index is not None:
+            delete_row(args.file_name, args.index)
+        else:
+            print("Error: Index is required for deleting a row.")
+
+    elif args.action == 'help':
+        print("Use the following commands to interact with the application:")
+        print(" - read <file_name>: Read the contents of the CSV file.")
+        print(" - create <file_name>: Create a new CSV file.")
+        print(
+            " - add <file_name> --data 'name,age,salary,department': Add a new row."
+        )
+        print(
+            " - update <file_name> --index <index> --data 'name,age,salary,department': Update an existing row."
+        )
+        print(" - delete <file_name> --index <index>: Delete a row.")
+        print(" - help: Display this help message.")
+        print(" - --web: Launch the web interface for the given action.")
+
+
+if __name__ == "__main__":
+    main()

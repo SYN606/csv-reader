@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV CRUD Flask CLI - Available Commands</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Available Commands</h1>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Create Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>create</code> command allows you to create a new CSV file with predefined
+                        columns.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py create &lt;file_name.csv&gt;</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to be created. The file will be
+                        created with the columns: <code>name</code>, <code>age</code>, <code>salary</code>, and
+                        <code>department</code>.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py create myfile.csv</code></pre>
+                <p>This will create a new CSV file named <code>myfile.csv</code> with the columns <code>name</code>,
+                    <code>age</code>, <code>salary</code>, and <code>department</code>.</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Read Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>read</code> command is used to read and display the contents of the CSV file in the
+                        terminal.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py read &lt;file_name.csv&gt;</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to read and display.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py read myfile.csv</code></pre>
+                <p>This will print the contents of <code>myfile.csv</code> to the terminal.</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Add Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>add</code> command allows you to add a new row to the CSV file.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py add &lt;file_name.csv&gt; --data "&lt;name&gt;,&lt;age&gt;,&lt;salary&gt;,&lt;department&gt;"</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to add the row to.</li>
+                    <li><code>--data</code>: A comma-separated string representing the new row's values. You need to
+                        provide data for all columns: <code>name</code>, <code>age</code>, <code>salary</code>, and
+                        <code>department</code>.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py add myfile.csv --data "John,30,60000,HR"</code></pre>
+                <p>This will add a new row with the data <code>John, 30, 60000, HR</code> to <code>myfile.csv</code>.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Update Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>update</code> command allows you to update an existing row in the CSV file at a
+                        specific index.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py update &lt;file_name.csv&gt; --index &lt;index&gt; --data "&lt;name&gt;,&lt;age&gt;,&lt;salary&gt;,&lt;department&gt;"</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to update.</li>
+                    <li><code>--index</code>: The index of the row to update (zero-based).</li>
+                    <li><code>--data</code>: A comma-separated string representing the new values for the row.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py update myfile.csv --index 1 --data "Jane,32,65000,Finance"</code></pre>
+                <p>This will update the row at index <code>1</code> in <code>myfile.csv</code> with the new data
+                    <code>Jane, 32, 65000, Finance</code>.</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Delete Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>delete</code> command allows you to delete a row from the CSV file at a specific
+                        index.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py delete &lt;file_name.csv&gt; --index &lt;index&gt;</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to delete the row from.</li>
+                    <li><code>--index</code>: The index of the row to delete (zero-based).</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py delete myfile.csv --index 1</code></pre>
+                <p>This will delete the row at index <code>1</code> in <code>myfile.csv</code>.</p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3>Web Command</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>The <code>--web</code> flag allows you to launch the web interface to view the CSV data in a
+                        browser.</strong></p>
+                <p><strong>Usage:</strong></p>
+                <pre><code>python main.py read &lt;file_name.csv&gt; --web</code></pre>
+                <p><strong>Arguments:</strong></p>
+                <ul>
+                    <li><code>&lt;file_name.csv&gt;</code>: The name of the CSV file to display.</li>
+                    <li><code>--web</code>: The flag to start the Flask web server and render the CSV file in a web
+                        browser.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>python main.py read myfile.csv --web</code></pre>
+                <p>This will start the Flask web server and display the contents of <code>myfile.csv</code> in a tabular
+                    format in a web browser.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
