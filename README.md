@@ -76,7 +76,7 @@ Alternatively, you can manually install Flask and Pandas:
 Commands
 --------
 
-For a detailed breakdown of each command and its usage, please refer to the [COMMANDS](COMMANDS) file.
+For a detailed breakdown of each command and its usage, please refer to the [COMMANDS](COMMANDS.md) file.
 
 Dependencies
 ------------
